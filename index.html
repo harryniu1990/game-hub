@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏中心 | HTML/CSS/JavaScript 游戏合集</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--light);
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .game-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .game-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid transparent;
+            color: var(--light);
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🎮 游戏中心</h1>
+            <p>探索精选的 HTML/CSS/JavaScript 游戏合集 - 现代设计，极致体验</p>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="搜索游戏...">
+            </div>
+
+            <div class="category-filter">
+                <button class="category-btn active" data-category="all">全部游戏</button>
+                <button class="category-btn" data-category="arcade">街机</button>
+                <button class="category-btn" data-category="puzzle">解谜</button>
+                <button class="category-btn" data-category="action">动作</button>
+                <button class="category-btn" data-category="classic">经典</button>
+            </div>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <!-- 游戏卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 游戏中心 | 基于 HTML/CSS/JavaScript 构建</p>
+    </div>
+
+    <script>
+        // 创建背景粒子
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 6 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 4;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.background = i % 3 === 0 ? 'var(--primary)' : 
+                                          i % 3 === 1 ? 'var(--secondary)' : 'var(--accent)';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 游戏数据
+        const games = [
+            {
+                name: "糖果粉碎",
+                path: "html-css-javascript-games/01-Candy-Crush-Game/index.html",
+                description: "体验刺激的三消游戏，挑战你的策略思维",
+                category: "puzzle",
+                icon: "🍬"
+            },
+            {
+                name: "射箭游戏",
+                path: "html-css-javascript-games/02-Archery-Game/index.html",
+                description: "提升你的反应速度和瞄准精度",
+                category: "action",
+                icon: "🎯"
+            },
+            {
+                name: "打字游戏",
+                path: "html-css-javascript-games/03-Speed-Typing-Game/index.html",
+                description: "提高你的打字速度和准确性",
+                category: "skill",
+                icon: "⌨️"
+            },
+            {
+                name: "打砖块",
+                path: "html-css-javascript-games/04-Breakout-Game/index.html",
+                description: "经典打砖块游戏，挑战高分记录",
+                category: "classic",
+                icon: "🧱"
+            },
+            {
+                name: "扫雷",
+                path: "html-css-javascript-games/05-Minesweeper-Game/index.html",
+                description: "经典的扫雷游戏，考验你的逻辑思维",
+                category: "puzzle",
+                icon: "💣"
+            },
+            {
+                name: "叠叠乐",
+                path: "html-css-javascript-games/06-Tower-Blocks/index.html",
+                description: "考验你的反应能力和精准度",
+                category: "skill",
+                icon: "🏢"
+            },
+            {
+                name: "乒乓球",
+                path: "html-css-javascript-games/07-Ping-Pong-Game/index.html",
+                description: "经典的Pong游戏，最早的电子游戏之一",
+                category: "classic",
+                icon: "🏓"
+            },
+            {
+                name: "俄罗斯方块",
+                path: "html-css-javascript-games/08-Tetris-Game/index.html",
+                description: "经典的俄罗斯方块游戏",
+                category: "puzzle",
+                icon: "🎮"
+            },
+            {
+                name: "迷宫游戏",
+                path: "html-css-javascript-games/09-Tilting-Maze-Game/index.html",
+                description: "倾斜迷宫，引导小球到达终点",
+                category: "puzzle",
+                icon: "🌀"
+            },
+            {
+                name: "记忆匹配",
+                path: "html-css-javascript-games/10-Memory-Card-Game/index.html",
+                description: "锻炼记忆力的卡片匹配游戏",
+                category: "puzzle",
+                icon: "🧠"
+            },
+            {
+                name: "剪刀石头布",
+                path: "html-css-javascript-games/11-Rock-Paper-Scissors/index.html",
+                description: "经典的剪刀石头布游戏",
+                category: "classic",
+                icon: "✂️"
+            },
+            {
+                name: "猜数字",
+                path: "html-css-javascript-games/12-Type-Number-Guessing-Game/index.html",
+                description: "经典的猜数字益智游戏",
+                category: "puzzle",
+                icon: "🔢"
+            },
+            {
+                name: "井字棋",
+                path: "html-css-javascript-games/13-Tic-Tac-Toe/index.html",
+                description: "典型的井字棋游戏",
+                category: "puzzle",
+                icon: "❌"
+            },
+            {
+                name: "贪吃蛇",
+                path: "html-css-javascript-games/14-Snake-Game/index.html",
+                description: "典型的贪吃蛇游戏，怀旧体验",
+                category: "classic",
+                icon: "🐍"
+            },
+            {
+                name: "四子棋",
+                path: "html-css-javascript-games/15-Connect-Four-Game/index.html",
+                description: "经典的连接四个棋子游戏",
+                category: "puzzle",
+                icon: "🔴"
+            },
+            {
+                name: "捕虫游戏",
+                path: "html-css-javascript-games/16-Insect-Catch-Game/index.html",
+                description: "快速点击捕捉昆虫的游戏",
+                category: "action",
+                icon: "🐞"
+            },
+            {
+                name: "打字挑战",
+                path: "html-css-javascript-games/17-Typing-Game/index.html",
+                description: "测试你的打字速度和准确性",
+                category: "skill",
+                icon: "⌨️"
+            },
+            {
+                name: "猜词游戏",
+                path: "html-css-javascript-games/18-Hangman-Game/index.html",
+                description: "经典的猜词游戏，拯救小人",
+                category: "puzzle",
+                icon: "🤔"
+            },
+            {
+                name: "像素鸟",
+                path: "html-css-javascript-games/19-Flappy-Bird-Game/index.html",
+                description: "经典的Flappy Bird游戏复刻版",
+                category: "arcade",
+                icon: "🐦"
+            },
+            {
+                name: "马路冲刺",
+                path: "html-css-javascript-games/20-Crossy-Road-Game/index.html",
+                description: "横穿马路的冒险游戏",
+                category: "arcade",
+                icon: "🚗"
+            },
+            {
+                name: "2048",
+                path: "html-css-javascript-games/21-2048-Game/index.html",
+                description: "经典的2048数字合成游戏",
+                category: "puzzle",
+                icon: "🔢"
+            },
+            {
+                name: "骰子游戏",
+                path: "html-css-javascript-games/22-Dice-Roll-Simulator/index.html",
+                description: "考验运气的骰子对战游戏",
+                category: "classic",
+                icon: "🎲"
+            },
+            {
+                name: "形状点击",
+                path: "html-css-javascript-games/23-Shape-Clicker-Game/index.html",
+                description: "快速点击形状的反应游戏",
+                category: "action",
+                icon: "⭕"
+            },
+            {
+                name: "打字挑战2",
+                path: "html-css-javascript-games/24-Typing-Game/index.html",
+                description: "另一个打字速度挑战游戏",
+                category: "skill",
+                icon: "⌨️"
+            },
+            {
+                name: "语音猜数",
+                path: "html-css-javascript-games/25-Speak-Number-Guessing-Game/index.html",
+                description: "使用语音猜测数字的游戏",
+                category: "puzzle",
+                icon: "🎤"
+            },
+            {
+                name: "水果忍者",
+                path: "html-css-javascript-games/26-Fruit-Slicer-Game/index.html",
+                description: "像忍者一样切开飞来的水果",
+                category: "action",
+                icon: "🍎"
+            },
+            {
+                name: "知识问答",
+                path: "html-css-javascript-games/27-Quiz-Game/index.html",
+                description: "测试你的知识广度",
+                category: "puzzle",
+                icon: "📚"
+            },
+            {
+                name: "表情捕手",
+                path: "html-css-javascript-games/28-Emoji-Catcher-Game/index.html",
+                description: "捕捉飞舞的表情符号",
+                category: "action",
+                icon: "😀"
+            },
+            {
+                name: "打地鼠",
+                path: "html-css-javascript-games/29-Whack-A-Mole-Game/index.html",
+                description: "经典打地鼠游戏，考验反应速度",
+                category: "arcade",
+                icon: "🐭"
+            },
+            {
+                name: "西蒙说",
+                path: "html-css-javascript-games/30-Simon-Says-Game/index.html",
+                description: "记忆并重复模式的游戏",
+                category: "memory",
+                icon: "🔄"
+            }
+        ];
+
+        // 渲染游戏卡片
+        function renderGames(filteredGames = games) {
+            const gamesGrid = document.getElementById('gamesGrid');
+            gamesGrid.innerHTML = '';
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.setAttribute('data-category', game.category);
+                
+                gameCard.innerHTML = `
+                    <div class="game-icon">${game.icon}</div>
+                    <h3>${game.name}</h3>
+                    <p>${game.description}</p>
+                    <a href="${game.path}" class="play-btn" target="_blank">开始游戏</a>
+                `;
+                
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        // 搜索功能
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredGames = games.filter(game => 
+                    game.name.toLowerCase().includes(searchTerm) || 
+                    game.description.toLowerCase().includes(searchTerm)
+                );
+                renderGames(filteredGames);
+            });
+        }
+
+        // 分类筛选
+        function setupCategoryFilter() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 移除所有active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 添加active类到当前按钮
+                    btn.classList.add('active');
+                    
+                    const category = btn.getAttribute('data-category');
+                    
+                    if (category === 'all') {
+                        renderGames();
+                    } else {
+                        const filteredGames = games.filter(game => game.category === category);
+                        renderGames(filteredGames);
+                    }
+                });
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            renderGames();
+            setupSearch();
+            setupCategoryFilter();
+        });
+    </script>
+</body>
+</html>
